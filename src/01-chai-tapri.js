@@ -28,4 +28,11 @@
  */
 export function chaiTapriRevenue(customers) {
   // Your code here
+  if(typeof customers!='number' || !Number.isInteger(customers) || customers<0) return {totalChai: 0, totalRevenue: 0};
+  const ans = {totalChai: customers, totalRevenue: 0}
+  for(let i=1;i<=customers;i++){
+    if(i%3===0) ans.totalRevenue=ans.totalRevenue+15;
+    else ans.totalRevenue=ans.totalRevenue+10;
+  }
+  return ans;
 }

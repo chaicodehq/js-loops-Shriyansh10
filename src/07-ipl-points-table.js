@@ -38,4 +38,62 @@
  */
 export function iplPointsTable(matches) {
   // Your code here
+  let resArray = [];
+  if (!Array.isArray(matches) || matches.length == 0) return resArray;
+
+  let resObject = matches.reduce((acc, match) => {
+    if (!acc.hasOwnProperty(match.team1)) {
+      acc[match.team1] = {
+        played: 0,
+        won: 0,
+        lost: 0,
+        tied: 0,
+        noResult: 0,
+        points: 0,
+      };
+    }
+    if (!acc.hasOwnProperty(match.team2)) {
+      acc[match.team2] = {
+        played: 0,
+        won: 0,
+        lost: 0,
+        tied: 0,
+        noResult: 0,
+        points: 0,
+      };
+    }
+    if (match.result === "tie") {
+      acc[match.team1].played++;
+      acc[match.team1].tied++;
+      acc[match.team1].points++;
+      acc[match.team2].played++;
+      acc[match.team2].tied++;
+      acc[match.team2].points++;
+    } else if (match.result === "no_result") {
+      acc[match.team1].played++;
+      acc[match.team1].noResult++;
+      acc[match.team1].points++;
+      acc[match.team2].played++;
+      acc[match.team2].noResult++;
+      acc[match.team2].points++;
+    } else {
+      const loser = match.winner === match.team1 ? match.team2 : match.team1;
+      acc[match.winner].played++;
+      acc[match.winner].won++;
+      acc[match.winner].points += 2;
+      acc[loser].lost++;
+      acc[loser].played++;
+    }
+    return acc;
+  }, {});
+  for (let item in resObject) {
+    let singleTeam = resObject[item];
+    singleTeam.team = item;
+    resArray.push(singleTeam);
+  }
+  resArray.sort((a, b) => {
+    if (a.points === b.points) return a.team.localeCompare(b.team);
+    else return b.points - a.points;
+  });
+  return resArray;
 }
